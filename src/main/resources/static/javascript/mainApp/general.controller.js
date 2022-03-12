@@ -12,7 +12,8 @@
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
-        $scope.userToAdd = "";
+      $scope.inputFile = undefined;
+      $scope.userToAdd = "";
         $scope.usersToAdd = "";
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
@@ -582,7 +583,6 @@
          */
         $scope.launchImportModal = function (listName) {
             $scope.listName = listName;
-
             $scope.confirmImportInstance = $uibModal.open({
                 templateUrl: "modal/importModal",
                 size: "lg",
@@ -634,13 +634,14 @@
          * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
          * which index of childNodes is housing the input.
          */
-        $scope.readTextFile = function ($event) {
-            let input = $event.currentTarget.parentNode.childNodes[3];
-            let file = input.files[0];
+        $scope.readTextFile = function () {
+            let file = $scope.inputFile;
+            console.log(file);
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
                 $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice();
+                console.log(' ##### members: ' + $scope.usersToAdd);
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
